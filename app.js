@@ -7,7 +7,6 @@ var app = (function()
 	var beacons = {};
 
 	var radpoints = 0;
-	var radpoints2 = 0;
 
 	// Timer that displays list of beacons.
 	var updateTimer = null;
@@ -122,26 +121,27 @@ var app = (function()
 		$.each(getSortedBeaconList(beacons), function(index, beacon)
 		{
 			// Only show beacons that are updated during the last 10 seconds.
-			if (beacon.name == "RADIATION" && beacon.timeStamp + 10000 > timeNow)
+			if (beacon.name == "RADIATION" && beacon.rssi > -74 && beacon.timeStamp + 10000 > timeNow)
 			{
-
+				radpoints++;
 				// Create HTML to display beacon data.
 				var element2 = $(
 					'<li>'
-					+   htmlBeaconRad2(beacon)
+					+   radpoints
 					+ '</li>'
 				);
+			
 				$('#radBeacons').append(element2);
 			}
 		});
 	}
 
-	function htmlBeaconRad2(beacon)
-	{
-			if (beacon.rssi > -74 && beacon.name == "RADIATION") radpoints2++;
-			return radpoints2 ?
-			'Radiation: ' + radpoints2 + '<br/>' :  '';
-	}
+//	function htmlBeaconRad(beacon)
+//	{
+//			if (beacon.rssi > -74 && beacon.name == "RADIATION") radpoints++;
+//			return radpoints ?
+//			'Radiation: ' + radpoints + '<br/>' :  '';
+//	}
 
 	function htmlBeaconAccuracy(beacon)
 		{var distance = evothings.eddystone.calculateAccuracy(
